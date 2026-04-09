@@ -1,0 +1,423 @@
+{
+  "datasets": [
+    {
+      "name": "e7eeaeea",
+      "displayName": "contagem_de_cpfs",
+      "queryLines": [
+        "SELECT \r\n",
+        "COUNT(DISTINCT cpf)\r\n",
+        "FROM costumers_registrations.gold.registrations;"
+      ]
+    },
+    {
+      "name": "3f185229",
+      "displayName": "contagem_de_cps_por_estado",
+      "queryLines": [
+        "SELECT \r\n",
+        "    estado,\r\n",
+        "    COUNT(DISTINCT cpf) AS qtd_cpfs_distintos\r\n",
+        "FROM costumers_registrations.gold.registrations\r\n",
+        "GROUP BY estado;"
+      ]
+    },
+    {
+      "name": "c928947f",
+      "displayName": "contagem_cpfs_M_F",
+      "queryLines": [
+        "SELECT\r\n",
+        "COUNT(DISTINCT CASE WHEN genero = 'M' THEN cpf END) AS qtd_masculino,\r\n",
+        "COUNT(DISTINCT CASE WHEN genero = 'F' THEN cpf END) AS qtd_feminino\r\n",
+        "FROM costumers_registrations.gold.registrations\r\n",
+        "WHERE cpf IS NOT NULL;"
+      ]
+    },
+    {
+      "name": "c785e368",
+      "displayName": "cadastros_por_mes",
+      "queryLines": [
+        "SELECT\r\n",
+        "DATE_FORMAT(data_cadastro, 'yyyy-MM') AS mes_ano,\r\n",
+        "COUNT(DISTINCT cpf) AS qtd_cpf_distinct\r\n",
+        "FROM costumers_registrations.gold.registrations\r\n",
+        "GROUP BY mes_ano;"
+      ],
+      "catalog": "costumers_registrations",
+      "schema": "gold"
+    },
+    {
+      "name": "f0e94533",
+      "displayName": "data_cadastro",
+      "queryLines": [
+        "SELECT data_cadastro\r\n",
+        "FROM costumers_registrations.gold.registrations"
+      ],
+      "catalog": "costumers_registrations",
+      "schema": "gold"
+    }
+  ],
+  "pages": [
+    {
+      "name": "b648dfa7",
+      "displayName": "Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "25e88933",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"font-size:28px\">**Applications for Data Quality Test**</span>\n",
+                "\n",
+                "<span style=\"font-size:18px\">This dashboard applies data quality tests in graphic</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 10,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "cpfs",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e7eeaeea",
+                  "fields": [
+                    {
+                      "name": "count(DISTINCT cpf)",
+                      "expression": "`count(DISTINCT cpf)`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "CPFS",
+                "showDescription": true,
+                "description": "See the cpf count",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "count(DISTINCT cpf)",
+                  "style": {
+                    "italic": true
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "quantity-distinct-cpfs",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3f185229",
+                  "fields": [
+                    {
+                      "name": "estado",
+                      "expression": "`estado`"
+                    },
+                    {
+                      "name": "qtd_cpfs_distintos",
+                      "expression": "`qtd_cpfs_distintos`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Quantity for Distinct CPFs Numbers"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "estado",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "qtd_cpfs_distintos",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "m",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c928947f",
+                  "fields": [
+                    {
+                      "name": "qtd_masculino",
+                      "expression": "`qtd_masculino`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "M",
+                "showDescription": true,
+                "description": "See the quantity for males",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "qtd_masculino",
+                  "style": {
+                    "italic": true
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "f10",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c928947f",
+                  "fields": [
+                    {
+                      "name": "qtd_feminino",
+                      "expression": "`qtd_feminino`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "F",
+                "showDescription": true,
+                "description": "See the quantity for females",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "qtd_feminino",
+                  "style": {
+                    "italic": true
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    },
+                    "significantFigures": {
+                      "type": "all"
+                    },
+                    "negativeSign": "standard"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "5f0547cf",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c785e368",
+                  "fields": [
+                    {
+                      "name": "sum(qtd_cpf_distinct)",
+                      "expression": "SUM(`qtd_cpf_distinct`)"
+                    },
+                    {
+                      "name": "mes_ano",
+                      "expression": "`mes_ano`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(qtd_cpf_distinct)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "mes_ano",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "natural-order"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "db565ee7",
+            "queries": [
+              {
+                "name": "dashboards/01f1342ec1661f7c84833511240fc65e/datasets/01f134497d80111c841c289a2ce15d51_data_cadastro",
+                "query": {
+                  "datasetName": "f0e94533",
+                  "fields": [
+                    {
+                      "name": "data_cadastro",
+                      "expression": "`data_cadastro`"
+                    },
+                    {
+                      "name": "data_cadastro_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true
+              },
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "data_cadastro",
+                    "queryName": "dashboards/01f1342ec1661f7c84833511240fc65e/datasets/01f134497d80111c841c289a2ce15d51_data_cadastro"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "700ed3f7",
+      "displayName": "Global Filters",
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
